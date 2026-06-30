@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Message, TypingUser } from "../types/chat";
 
-const BACKEND_URL = "http://localhost:4000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 export function useSocket(username: string, roomId: string) {
   const socketRef = useRef<Socket | null>(null);

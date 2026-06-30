@@ -79,17 +79,25 @@ npm run dev
 
 Backend runs on `http://localhost:4000`
 
-### 3. Start the frontend
+### 3. Configure the frontend environment
 
 ```bash
 cd frontend
+cp .env.example .env
+```
+
+This sets `VITE_BACKEND_URL` to point at your backend server.
+
+### 4. Start the frontend
+
+```bash
 npm install
 npm run dev
 ```
 
 Frontend runs on `http://localhost:3000`
 
-### 4. Open the app
+### 5. Open the app
 
 Open two browser tabs at `http://localhost:3000`, enter a username and the same room name in both — and start chatting in real time.
 
