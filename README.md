@@ -11,9 +11,13 @@ A real-time chat application built with **React**, **TypeScript**, **Node.js**, 
 - Real-time messaging with Socket.IO WebSockets
 - Room-based chat — join any room by name
 - Live typing indicators — see when others are typing
-- Join / leave notifications
+- Join / leave notifications including tab/browser close detection
 - Connection status indicator
 - Messages disabled when disconnected — no silent message loss
+- Message delivery confirmation via Socket.IO ACK
+- Rate limiting — prevents message spam (500ms cooldown)
+- Duplicate username prevention per room
+- Environment-based configuration for easy deployment
 - Dark theme UI
 
 ---
