@@ -2,16 +2,24 @@ import { useSocket } from "../hooks/useSocket";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { TypingIndicator } from "./TypingIndicator";
+import { useEffect } from "react";
 
 interface Props {
   username: string;
   roomId: string;
   onLeave: () => void;
+  onJoinFailed: (error: string) => void;
 }
 
-export function ChatRoom({ username, roomId, onLeave }: Props) {
-  const { messages, typingUsers, connected, socketId, error, sendMessage, startTyping, stopTyping } =
+export function ChatRoom({ username, roomId, onLeave, onJoinFailed }: Props) {
+  const { messages, typingUsers, connected, socketId, error, joinError, sendMessage, startTyping, stopTyping } =
   useSocket(username, roomId);
+  useEffect(() => {
+    if (joinError) {
+      onJoinFailed(joinError);
+      onLeave();
+    }
+  }, [joinError]);
   return (
     <div className="chatroom">
       <header className="chatroom-header">

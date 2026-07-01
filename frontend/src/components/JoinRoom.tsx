@@ -2,9 +2,10 @@ import { useState, FormEvent } from "react";
 
 interface Props {
   onJoin: (username: string, roomId: string) => void;
+  error?: string | null;
 }
 
-export function JoinRoom({ onJoin }: Props) {
+export function JoinRoom({ onJoin, error }: Props) {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
@@ -20,6 +21,7 @@ export function JoinRoom({ onJoin }: Props) {
       <div className="join-card">
         <h1 className="join-title">💬 ChatFlow</h1>
         <p className="join-subtitle">Join a room to start chatting</p>
+        {error && <div className="error-banner">{error}</div>}
         <form onSubmit={handleSubmit} className="join-form">
           <input
             className="input"

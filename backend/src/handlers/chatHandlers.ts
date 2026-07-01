@@ -11,8 +11,21 @@ interface Message {
 }
 
 export function registerChatHandlers(io: Server, socket: Socket) {
-  socket.on("room:join", ({ roomId, username }: { roomId: string; username: string }) => {
-    socket.join(roomId);
+  
+  socket.on("room:join", ({ roomId, username }: { roomId: string; username: string }, callback?: (res: { success: boolean; error?: string }) => void) => {
+    const existingClients = io.sockets.adapter.rooms.get(roomId);
+    if (existingClients) {
+      for (const clientId of existingClients) {
+        const clientSocket = io.sockets.sockets.get(clientId);
+      if (clientSocket?.data.username === username) {
+        callback?.({ success: false, error: `Username "${username}" is already taken in this room` });
+        return;
+      }
+    }
+  }
+  callback?.({ success: true });
+ 
+  socket.join(roomId);
     socket.data.username = username;
     socket.data.roomId = roomId;
 

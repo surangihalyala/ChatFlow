@@ -11,6 +11,7 @@ export function useSocket(username: string, roomId: string) {
   const [connected, setConnected] = useState(false);
   const [socketId, setSocketId] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [joinError, setJoinError] = useState<string | null>(null);
 
   useEffect(() => {
     const socket = io(BACKEND_URL);
@@ -19,7 +20,11 @@ export function useSocket(username: string, roomId: string) {
     socket.on("connect", () => {
       setConnected(true);
       setSocketId(socket.id ?? "");
-      socket.emit("room:join", { roomId, username });
+      socket.emit("room:join", { roomId, username }, (response: { success: boolean; error?: string }) => {
+        if (!response.success) {
+          setJoinError(response.error ?? "Failed to join room");
+        }
+      });
     });
 
     socket.on("disconnect", () => {
@@ -93,6 +98,6 @@ export function useSocket(username: string, roomId: string) {
   function stopTyping() {
     socketRef.current?.emit("typing:stop", { roomId });
   }
-  return { messages, typingUsers, connected, socketId, error, sendMessage, startTyping, stopTyping };
+  return { messages, typingUsers, connected, socketId, error, joinError, sendMessage, startTyping, stopTyping };
 
 }
