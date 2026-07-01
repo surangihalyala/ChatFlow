@@ -10,9 +10,8 @@ interface Props {
 }
 
 export function ChatRoom({ username, roomId, onLeave }: Props) {
-  const { messages, typingUsers, connected, socketId, sendMessage, startTyping, stopTyping } =
-    useSocket(username, roomId);
-
+  const { messages, typingUsers, connected, socketId, error, sendMessage, startTyping, stopTyping } =
+  useSocket(username, roomId);
   return (
     <div className="chatroom">
       <header className="chatroom-header">
@@ -30,6 +29,7 @@ export function ChatRoom({ username, roomId, onLeave }: Props) {
       <MessageList messages={messages} currentUserId={socketId} />
 
       <div className="chatroom-footer">
+        {error && <div className="error-banner">{error}</div>}
         <TypingIndicator typingUsers={typingUsers} />
         <MessageInput
           onSend={sendMessage}

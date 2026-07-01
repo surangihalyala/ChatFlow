@@ -10,6 +10,7 @@ export function useSocket(username: string, roomId: string) {
   const [typingUsers, setTypingUsers] = useState<Map<string, string>>(new Map());
   const [connected, setConnected] = useState(false);
   const [socketId, setSocketId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const socket = io(BACKEND_URL);
@@ -77,7 +78,12 @@ export function useSocket(username: string, roomId: string) {
   }, [username, roomId]);
 
   function sendMessage(content: string) {
-    socketRef.current?.emit("message:send", { roomId, content });
+    socketRef.current?.emit("message:send", { roomId, content }, (response: { success: boolean; error?: string }) => {
+      if (!response.success) {
+        setError(response.error ?? "Failed to send message");
+        setTimeout(() => setError(null), 2000);
+      }
+    });
   }
 
   function startTyping() {
@@ -87,6 +93,6 @@ export function useSocket(username: string, roomId: string) {
   function stopTyping() {
     socketRef.current?.emit("typing:stop", { roomId });
   }
+  return { messages, typingUsers, connected, socketId, error, sendMessage, startTyping, stopTyping };
 
-  return { messages, typingUsers, connected, socketId, sendMessage, startTyping, stopTyping };
 }

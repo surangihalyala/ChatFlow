@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { Server, Socket } from "socket.io";
 
 interface Message {
@@ -35,8 +36,19 @@ export function registerChatHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("message:send", ({ roomId, content }: { roomId: string; content: string }, callback: (res: { success: boolean; error?: string }) => void) => {
+    const now = Date.now();
+    const lastMessageTime = socket.data.lastMessageTime ?? 0;
+    const RATE_LIMIT_MS = 500;
+
+    if (now - lastMessageTime < RATE_LIMIT_MS) {
+      callback({ success: false, error: "You're sending messages too fast" });
+      return;
+    }
+
+    socket.data.lastMessageTime = now;
+
     const message: Message = {
-      id: `${Date.now()}-${socket.id}`,
+      id: nanoid(),
       roomId,
       senderId: socket.id,
       senderName: socket.data.username ?? "Anonymous",

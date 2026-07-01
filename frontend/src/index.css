@@ -304,3 +304,14 @@ body {
   0%, 60%, 100% { transform: translateY(0); }
   30% { transform: translateY(-5px); }
 }
+
+.error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
